@@ -18,6 +18,7 @@ public class User implements Serializable {
     private String token;
     private Long gmtCreated;
     private Long gmtModified;
+    private String bio;
 
     public Integer getId() {
         return id;
@@ -67,6 +68,14 @@ public class User implements Serializable {
         this.gmtModified = gmtModified;
     }
 
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -76,6 +85,7 @@ public class User implements Serializable {
                 ", token='" + token + '\'' +
                 ", gmtCreated=" + gmtCreated +
                 ", gmtModified=" + gmtModified +
+                ", bio='" + bio + '\'' +
                 '}';
     }
 }
