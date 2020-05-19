@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import cn.wdb.community.pojo.User;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
@@ -31,7 +33,8 @@ public class AuthorizeController {
     @GetMapping("/callBack")
     public String callBack(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request){
+                           HttpServletRequest request,
+                           HttpServletResponse response){
         GitHubDTO gitHubDTO = new GitHubDTO();
         gitHubDTO.setClient_id(client_id);
         gitHubDTO.setClient_secret(client_secret);
@@ -42,16 +45,17 @@ public class AuthorizeController {
         GitHubUser gitHubUser = authorizeProvider.getUser(access_token);
         HttpSession session = request.getSession();
         if(gitHubUser != null){
-            //登录成功，写session
-            session.setAttribute("user",gitHubUser);
             //写入数据库中
             User user = new User();
             user.setAccountId(String.valueOf(gitHubUser.getId()));
             user.setUsername(gitHubUser.getName());
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setGmtCreated(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreated());
             userMapper.insert(user);
+            Cookie cookie = new Cookie("community_token",token);
+            response.addCookie(cookie);
             return "redirect:/";
         }else {
             //登录失败，重新登录

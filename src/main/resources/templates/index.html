@@ -28,7 +28,7 @@
                     <a href="https://github.com/login/oauth/authorize?client_id=c87d6d42ab93f810fba5&redirect_uri=http://localhost:8080/callBack&scope=user&state=1">登录</a>
                 </li>
                 <li class="dropdown" th:if="${session.user != null}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getName()}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getUsername()}">
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
