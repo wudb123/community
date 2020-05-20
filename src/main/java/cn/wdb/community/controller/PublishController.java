@@ -58,7 +58,7 @@ public class PublishController {
         question.setCreator(user.getId());
         questionMapper.insertSelective(question);
 
-        return "index";
+        return "redirect:index";
 
     }
 }

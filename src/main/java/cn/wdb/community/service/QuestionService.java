@@ -5,9 +5,12 @@ import cn.wdb.community.mapper.QuestionMapper;
 import cn.wdb.community.mapper.UserMapper;
 import cn.wdb.community.pojo.Question;
 import cn.wdb.community.pojo.User;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +23,16 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public List<QuestionDto> findAll() {
-        List<QuestionDto> questionDtoList = new ArrayList<>();
+    public List<Question> find(Integer page, Integer pageSize){
+        if(page < 1)
+            page = 1;
+        PageHelper.startPage(page,pageSize);
         List<Question> questions = questionMapper.selectAll();
+        return questions;
+    }
+
+    public List<QuestionDto> findAll(List<Question> questions) {
+        List<QuestionDto> questionDtoList = new ArrayList<>();
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDto questionDto = new QuestionDto();
@@ -32,4 +42,5 @@ public class QuestionService {
         }
         return questionDtoList;
     }
+
 }

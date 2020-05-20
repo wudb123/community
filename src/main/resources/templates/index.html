@@ -1,49 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="css/community.css">
+    <script href="js/jquery-3.3.1.min.js" type="application/javascript"></script>
     <script href="js/bootstrap.min.js" type="application/javascript"></script>
     <title>JAVA学习社区</title>
 </head>
 <body class="body">
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">JAVA学习社区</a>
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="搜索问题">
-                </div>
-                <button type="submit" class="btn btn-default">搜索</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li th:if="${session.user != null}">
-                    <a href="/publish">发布问题</a>
-                </li>
-                <li th:if="${session.user == null}">
-                    <a href="https://github.com/login/oauth/authorize?client_id=c87d6d42ab93f810fba5&redirect_uri=http://localhost:8080/callBack&scope=user&state=1">登录</a>
-                </li>
-                <li class="dropdown" th:if="${session.user != null}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getUsername()}">
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">我的问题</a></li>
-                        <li><a href="#">退出登录</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
+<div th:insert="~{head :: header}"></div>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
@@ -59,10 +26,46 @@
                     <h4 class="media-heading"><span th:text="${question.title}"></span></h4>
                     <span class="text_description" th:text="${question.commentCount}"></span>个回复 •
                     <span class="text_description" th:text="${question.viewCount}"></span>次浏览 •
-                    <span class="text_description" th:text="${#dates.format(question.gmtCreated,'dd/MM/yyyy')}"></span>
+                    <span class="text_description" th:text="${#dates.format(question.gmtCreated,'yyyy/MM/dd')}"></span>
 
                 </div>
             </div>
+            <nav aria-label="Page navigation" style="float:right">
+                <ul class="pagination">
+                    <li>
+                        <a href="" th:href="@{'/index?page=1&pageSize=8'}" aria-label="Previous">
+                            <span aria-hidden="true">首页</span>
+                        </a>
+                    </li>
+                    <li th:class="${pageInfo.pageNum -1 < 1}? 'disabled' : ''">
+                        <a href="#" th:if="${pageInfo.pageNum != 1 }" th:href="@{'/index?page='+${pageInfo.pageNum -1}+'&pageSize=8'}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                        <a href="#" th:if="${pageInfo.pageNum == 1 }" th:href="@{'/index?page=1&pageSize=8'}" aria-label="Previous">N
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <li th:each="page:${#numbers.sequence(1,pageInfo.pages)}" th:class="${pageInfo.pageNum == page} ? 'active' : ''">
+                        <a href="#" th:href="@{'/index?page='+${page}+'&pageSize=8'}" th:text="${page}"></a>
+                    </li>
+
+                    <li th:class="${pageInfo.pageNum +1 > pageInfo.pages}? 'disabled' : ''">
+                        <a href="#" th:if="${pageInfo.pageNum == pageInfo.pages}" th:href="@{'/index?page='+${pageInfo.pageNum}+'&pageSize=8'}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                        <a href="#" th:if="${pageInfo.pageNum != pageInfo.pages}" th:href="@{'/index?page='+${pageInfo.pageNum +1}+'&pageSize=8'}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="" th:href="@{'/index?page='+${pageInfo.pages}+'&pageSize=8'}" aria-label="Next">
+                            <span aria-hidden="true">尾页</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>热门话题</h3>

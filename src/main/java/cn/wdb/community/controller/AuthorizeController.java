@@ -58,10 +58,10 @@ public class AuthorizeController {
             userMapper.insert(user);
             Cookie cookie = new Cookie("community_token",token);
             response.addCookie(cookie);
-            return "redirect:/";
+            return "redirect:index";
         }else {
             //登录失败，重新登录
-            return "redirect:/";
+            return "redirect:index";
         }
 
     }
