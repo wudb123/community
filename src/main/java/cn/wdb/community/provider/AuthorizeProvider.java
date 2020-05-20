@@ -1,18 +1,16 @@
 package cn.wdb.community.provider;
 
-import cn.wdb.community.dto.GitHubDTO;
+import cn.wdb.community.dto.GitHubDto;
 import cn.wdb.community.dto.GitHubUser;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
-import javax.lang.model.element.VariableElement;
 import java.io.IOException;
 
 @Component
 public class AuthorizeProvider {
-    public String getAccess_token(GitHubDTO gitHubDTO){
+    public String getAccess_token(GitHubDto gitHubDTO){
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(mediaType,JSON.toJSONString(gitHubDTO));

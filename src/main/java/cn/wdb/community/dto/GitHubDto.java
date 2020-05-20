@@ -1,6 +1,6 @@
 package cn.wdb.community.dto;
 
-public class GitHubDTO {
+public class GitHubDto {
     private String client_id;
     private String client_secret;
     private String code;

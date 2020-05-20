@@ -1,6 +1,6 @@
 package cn.wdb.community.controller;
 
-import cn.wdb.community.dto.GitHubDTO;
+import cn.wdb.community.dto.GitHubDto;
 import cn.wdb.community.dto.GitHubUser;
 import cn.wdb.community.provider.AuthorizeProvider;
 import cn.wdb.community.mapper.UserMapper;
@@ -35,13 +35,13 @@ public class AuthorizeController {
                            @RequestParam(name = "state") String state,
                            HttpServletRequest request,
                            HttpServletResponse response){
-        GitHubDTO gitHubDTO = new GitHubDTO();
-        gitHubDTO.setClient_id(client_id);
-        gitHubDTO.setClient_secret(client_secret);
-        gitHubDTO.setCode(code);
-        gitHubDTO.setRedirect_uri(redirect_uri);
-        gitHubDTO.setState(state);
-        String access_token = authorizeProvider.getAccess_token(gitHubDTO);
+        GitHubDto gitHubDto = new GitHubDto();
+        gitHubDto.setClient_id(client_id);
+        gitHubDto.setClient_secret(client_secret);
+        gitHubDto.setCode(code);
+        gitHubDto.setRedirect_uri(redirect_uri);
+        gitHubDto.setState(state);
+        String access_token = authorizeProvider.getAccess_token(gitHubDto);
         GitHubUser gitHubUser = authorizeProvider.getUser(access_token);
         HttpSession session = request.getSession();
         if(gitHubUser != null){
@@ -51,8 +51,10 @@ public class AuthorizeController {
             user.setUsername(gitHubUser.getName());
             String token = UUID.randomUUID().toString();
             user.setToken(token);
+            user.setAvatar_url(gitHubUser.getAvatar_url());
             user.setGmtCreated(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreated());
+            user.setBio(gitHubUser.getBio());
             userMapper.insert(user);
             Cookie cookie = new Cookie("community_token",token);
             response.addCookie(cookie);

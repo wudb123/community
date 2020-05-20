@@ -1,9 +1,12 @@
 package cn.wdb.community.controller;
 
+import cn.wdb.community.dto.QuestionDto;
 import cn.wdb.community.mapper.UserMapper;
 import cn.wdb.community.pojo.User;
+import cn.wdb.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
@@ -15,8 +18,11 @@ public class IndexController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private QuestionService questionService;
+
     @GetMapping("/")
-    public String index(HttpServletRequest request){
+    public String index(HttpServletRequest request, Model model){
         Cookie[] cookies = request.getCookies();
         if (cookies != null){
             for (Cookie cookie : cookies) {
@@ -33,6 +39,8 @@ public class IndexController {
             }
         }
 
+        List<QuestionDto> questionDtoList = questionService.findAll();
+        model.addAttribute("questions",questionDtoList);
         return "index";
     }
 }
