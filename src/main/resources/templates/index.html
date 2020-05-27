@@ -24,44 +24,46 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading"><span th:text="${question.title}"></span></h4>
+                    <h4 class="media-heading">
+                        <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
+                    </h4>
                     <span class="text_description" th:text="${question.commentCount}"></span>个回复 •
                     <span class="text_description" th:text="${question.viewCount}"></span>次浏览 •
-                    <span class="text_description" th:text="${#dates.format(question.gmtCreated,'yyyy/MM/dd')}"></span>
+                    <span class="text_description" th:text="${#dates.format(question.gmtCreated,'yyyy-MM-dd')}"></span>
 
                 </div>
             </div>
             <nav aria-label="Page navigation" style="float:right">
                 <ul class="pagination">
                     <li>
-                        <a href="" th:href="@{'/index?page=1&pageSize=8'}" aria-label="Previous">
+                        <a href="" th:href="@{'?page=1&pageSize=8'}" aria-label="Previous">
                             <span aria-hidden="true">首页</span>
                         </a>
                     </li>
                     <li th:class="${pageInfo.pageNum -1 < 1}? 'disabled' : ''">
-                        <a href="#" th:if="${pageInfo.pageNum != 1 }" th:href="@{'/index?page='+${pageInfo.pageNum -1}+'&pageSize=8'}" aria-label="Previous">
+                        <a href="#" th:if="${pageInfo.pageNum != 1 }" th:href="@{'?page='+${pageInfo.pageNum -1}+'&pageSize=8'}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
-                        <a href="#" th:if="${pageInfo.pageNum == 1 }" th:href="@{'/index?page=1&pageSize=8'}" aria-label="Previous">N
+                        <a href="#" th:if="${pageInfo.pageNum == 1 }" th:href="@{'?page=1&pageSize=8'}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
 
                     <li th:each="page:${#numbers.sequence(1,pageInfo.pages)}" th:class="${pageInfo.pageNum == page} ? 'active' : ''">
-                        <a href="#" th:href="@{'/index?page='+${page}+'&pageSize=8'}" th:text="${page}"></a>
+                        <a href="#" th:href="@{'?page='+${page}+'&pageSize=8'}" th:text="${page}"></a>
                     </li>
 
                     <li th:class="${pageInfo.pageNum +1 > pageInfo.pages}? 'disabled' : ''">
-                        <a href="#" th:if="${pageInfo.pageNum == pageInfo.pages}" th:href="@{'/index?page='+${pageInfo.pageNum}+'&pageSize=8'}" aria-label="Next">
+                        <a href="#" th:if="${pageInfo.pageNum == pageInfo.pages}" th:href="@{'?page='+${pageInfo.pageNum}+'&pageSize=8'}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
-                        <a href="#" th:if="${pageInfo.pageNum != pageInfo.pages}" th:href="@{'/index?page='+${pageInfo.pageNum +1}+'&pageSize=8'}" aria-label="Next">
+                        <a href="#" th:if="${pageInfo.pageNum != pageInfo.pages}" th:href="@{'?page='+${pageInfo.pageNum +1}+'&pageSize=8'}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
 
                     <li>
-                        <a href="" th:href="@{'/index?page='+${pageInfo.pages}+'&pageSize=8'}" aria-label="Next">
+                        <a href="" th:href="@{'?page='+${pageInfo.pages}+'&pageSize=8'}" aria-label="Next">
                             <span aria-hidden="true">尾页</span>
                         </a>
                     </li>

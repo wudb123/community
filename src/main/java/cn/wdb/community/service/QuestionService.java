@@ -34,7 +34,9 @@ public class QuestionService {
     public List<QuestionDto> findAll(List<Question> questions) {
         List<QuestionDto> questionDtoList = new ArrayList<>();
         for (Question question : questions) {
-            User user = userMapper.selectByPrimaryKey(question.getCreator());
+            User user = new User();
+            user.setAccountId(String.valueOf(question.getCreator()));
+            user = userMapper.selectOne(user);
             QuestionDto questionDto = new QuestionDto();
             BeanUtils.copyProperties(question, questionDto);
             questionDto.setUser(user);
@@ -43,4 +45,21 @@ public class QuestionService {
         return questionDtoList;
     }
 
+
+    public List<Question> findByUserId(Integer page, Integer pageSize, Integer id) {
+        Question question = new Question();
+        question.setCreator(id);
+        PageHelper.startPage(page,pageSize);
+        List<Question> questions = questionMapper.select(question);
+        return questions;
+    }
+
+    public Question selectByPrimaryKey(Integer id) {
+        return questionMapper.selectByPrimaryKey(id);
+    }
+
+    public void updateViewById(Question question) {
+        question.setViewCount(question.getViewCount()+1);
+        questionMapper.updateViewById(question);
+    }
 }

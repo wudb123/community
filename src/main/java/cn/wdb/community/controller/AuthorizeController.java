@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import cn.wdb.community.pojo.User;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ public class AuthorizeController {
 
     @Autowired
     private UserMapper userMapper;
+
     @Value("${gitHub.authorize.client_id}")
     private String client_id;
     @Value("${gitHub.authorize.client_secret}")
@@ -48,6 +50,7 @@ public class AuthorizeController {
             //写入数据库中
             User user = new User();
             user.setAccountId(String.valueOf(gitHubUser.getId()));
+            User user1 = userMapper.selectOne(user);
             user.setUsername(gitHubUser.getName());
             String token = UUID.randomUUID().toString();
             user.setToken(token);
@@ -55,14 +58,28 @@ public class AuthorizeController {
             user.setGmtCreated(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreated());
             user.setBio(gitHubUser.getBio());
-            userMapper.insert(user);
+            if(user1 != null){
+                userMapper.updateByAccountId(user);
+            }else {
+                userMapper.insert(user);
+            }
             Cookie cookie = new Cookie("community_token",token);
             response.addCookie(cookie);
-            return "redirect:index";
+            return "redirect:/";
         }else {
             //登录失败，重新登录
-            return "redirect:index";
+            return "redirect:/";
         }
+
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+
+        response.addCookie(new Cookie("community_token",null));
+        return "redirect:/";
 
     }
 }
